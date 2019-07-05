@@ -1,16 +1,13 @@
 package com.example.firebaseconnection;
 
 public class name {
-    public String n;
+    private String n;
+    public name(){}
     public name(String n){
         this.n = n;
     }
 
     public String getN() {
         return n;
-    }
-
-    public void setN(String n) {
-        this.n = n;
     }
 }

@@ -3,6 +3,7 @@ package com.example.firebaseconnection;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -43,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<Void> task) {
                         if(task.isSuccessful()){
                             Toast.makeText(MainActivity.this, "Successful",Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(MainActivity.this, NamesList.class);
+                            startActivity(intent);
                         }
                         else{
                             Toast.makeText(MainActivity.this, "Fail",Toast.LENGTH_SHORT).show();

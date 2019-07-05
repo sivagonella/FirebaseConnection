@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -17,18 +18,26 @@ import java.util.ArrayList;
 
 public class NamesList extends AppCompatActivity {
 
+    ArrayList<name> arrayList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_names_list);
+        setContentView(R.layout.list_view);
 
-        ArrayList<name> arrayList = new ArrayList<name>();
+        arrayList = new ArrayList<name>();
+
+        final ListView listView = findViewById(R.id.shit);
 
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Names");
-        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+        databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                //
+                for (DataSnapshot d : dataSnapshot.getChildren()) {
+                    arrayList.add(d.getValue(name.class));
+                }
+                NamesAdapter namesAdapter = new NamesAdapter(getApplicationContext(), arrayList);
+                listView.setAdapter(namesAdapter);
             }
 
             @Override
@@ -36,11 +45,10 @@ public class NamesList extends AppCompatActivity {
 
             }
         });
-
-        ArrayAdapter<name> arrayAdapter = new ArrayAdapter<>(this, 0, arrayList);
-
-        ListView listView = (ListView) findViewById(R.id.list_item);
-        listView.setAdapter(arrayAdapter);
+//        Log.v("before", "Enterthe dragon");
+//        for (name i : arrayList) {
+//            Log.v("blah", i.getN());
+//        }
 
     }
 }
