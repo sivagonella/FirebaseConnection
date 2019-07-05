@@ -28,7 +28,7 @@ public class NamesList extends AppCompatActivity {
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                //
+                
             }
 
             @Override
