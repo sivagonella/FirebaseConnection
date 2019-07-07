@@ -45,10 +45,5 @@ public class NamesList extends AppCompatActivity {
 
             }
         });
-//        Log.v("before", "Enterthe dragon");
-//        for (name i : arrayList) {
-//            Log.v("blah", i.getN());
-//        }
-
     }
 }

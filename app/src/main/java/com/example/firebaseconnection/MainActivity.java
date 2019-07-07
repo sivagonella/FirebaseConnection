@@ -10,27 +10,36 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.firebaseconnection.R;
+import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
     name na ;
     DatabaseReference databaseReference ;
     String n  ;
     TextInputEditText textInputEditText ;
+
+    public final int RC_SIGN_IN = 1;
+    private FirebaseAuth mFirebaseAuth;
+    private FirebaseAuth.AuthStateListener mAuthStateListener;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-         textInputEditText = (TextInputEditText) findViewById(R.id.name);
+        textInputEditText = (TextInputEditText) findViewById(R.id.name);
 
+        mFirebaseAuth = FirebaseAuth.getInstance();
 
-
-         databaseReference = FirebaseDatabase.getInstance().getReference().child("Names");
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("Names");
 
 
         Button submit = (Button) findViewById(R.id.submit);
@@ -54,5 +63,32 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
         });
+
+        mAuthStateListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if(user != null){
+                    Toast.makeText(MainActivity.this,"Logged in", Toast.LENGTH_SHORT);
+                }
+                else{
+                    startActivityForResult(AuthUI.getInstance().createSignInIntentBuilder().setIsSmartLockEnabled(false).setAvailableProviders(Arrays.asList(
+                            new AuthUI.IdpConfig.GoogleBuilder().build(),
+                            new AuthUI.IdpConfig.EmailBuilder().build())).build(), RC_SIGN_IN);
+                }
+            }
+        };
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mFirebaseAuth.removeAuthStateListener(mAuthStateListener);
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        mFirebaseAuth.addAuthStateListener(mAuthStateListener);
     }
 }
