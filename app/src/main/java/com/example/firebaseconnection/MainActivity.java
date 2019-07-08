@@ -1,9 +1,11 @@
 package com.example.firebaseconnection;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -28,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     TextInputEditText textInputEditText ;
 
     public final int RC_SIGN_IN = 1;
+    public static final int RC_PHOTO_PICKER = 2;
     private FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
     @Override
@@ -78,6 +81,27 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         };
+
+        Button logout = (Button) findViewById(R.id.logout);
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FirebaseAuth.getInstance().signOut();
+            }
+        });
+
+
+        Button photoPicker = findViewById(R.id.photoPicker);
+        photoPicker.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("image/jpeg");
+                intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
+                startActivityForResult(Intent.createChooser(intent, "Complete action using"), RC_PHOTO_PICKER);
+            }
+        });
     }
 
     @Override
